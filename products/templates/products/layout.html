@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖥️</text></svg>"
+    />
+    <title>Gestión de Productos - ElectroVault</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  </head>
+  <body class="bg-gray-50">
+    <img
+      src="{% static 'products/inventario.svg' %}"
+      class="-z-10 fixed w-[150%]"
+      alt="fondo"
+    />
+    <nav
+      class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-black/10 shadow-sm"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center gap-2">
+            <a
+              href="{% url 'inicio'%}"
+              class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent"
+            >
+              ElectroVault
+            </a>
+          </div>
+          <div class="flex items-center gap-4">
+            <a
+              href="{% url 'inicio' %}"
+              class="text-gray-600 hover:text-purple-600 transition-colors duration-300"
+              >Inicio</a
+            >
+            <a
+              href="{% url 'logout' %}"
+              class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
+            >
+              Cerrar Sesión
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+    <main class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      {% block content %} {% endblock %}
+    </main>
+
+    <img
+      src="{% static 'main/footer.svg' %}"
+      class="w-full object-cover -mt-[300px"
+    />
+    <footer class="bg-slate-900 text-slate-200">
+      <div class="pt-8">
+        <div
+          class="flex flex-col md:flex-row items-center justify-center w-full"
+        >
+          <p class="text-gray-400 text-sm">
+            © 2025 ElectroVault. Todos los derechos reservados.
+          </p>
+        </div>
+        <div class="mt-8 pb-8 text-center">
+          <p class="text-gray-500 text-sm">
+            Desarrollado con ❤️ por
+            <span class="text-purple-400 font-semibold">2khartes</span> |
+            <span class="text-gray-400"
+              >Diseño y Desarrollo Web Profesional</span
+            >
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

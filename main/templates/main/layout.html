@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <title>TechFlow</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖥️</text></svg>"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="antialiased bg-gradient-to-br from-gray-100 to-gray-300">
+    <nav
+      class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-black/10"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center gap-2">
+            <a
+              href="{% url 'inicio'%}"
+              class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent"
+              >🖥️ ElectroVault
+            </a>
+          </div>
+          <a
+            href="{% url 'inicio' %}"
+            class="bg-amber-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
+          >
+            🏠
+          </a>
+          {% if request.user.is_authenticated %}
+          <div class="gap-2 flex items-center">
+            <h3
+              class="font-semibold text-lg text-gray-400 border-r-4 border-gray-300 pr-3"
+            >
+              {{request.user.username}}
+            </h3>
+            <a
+              href="{% url 'shopping_cart:lista' %}"
+              class="bg-sky-400 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
+            >
+              🛒
+            </a>
+            {% if request.user.is_superuser %}
+            <a
+              href="{% url 'products:lista' %}"
+              class="bg-rose-400 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
+            >
+              📦 Inventario
+            </a>
+            {% endif %}
+            <a
+              href="{% url 'logout' %}"
+              class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
+            >
+              🚪 Cerrar Sesión
+            </a>
+          </div>
+          {% else %}
+          <div class="mx-w-[400px] gap-2 flex">
+            <a
+              href="{% url 'login' %}"
+              class="bg-purple-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
+            >
+              Iniciar Sesión
+            </a>
+            <a
+              href="{% url 'register' %}"
+              class="bg-blue-600 hover:bg-violet-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
+            >
+              Registro
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
+    <main class="">{% block content %} {% endblock %}</main>
+    <img
+      src="{% static 'main/footer.svg' %}"
+      class="w-full object-cover -mt-[200px]"
+    />
+    <footer class="bg-slate-900 text-slate-200">
+      <div class="pt-8">
+        <div
+          class="flex flex-col md:flex-row items-center justify-center w-full"
+        >
+          <p class="text-gray-400 text-sm">
+            © 2025 ElectroVault. Todos los derechos reservados.
+          </p>
+        </div>
+        <div class="mt-8 pb-8 text-center">
+          <p class="text-gray-500 text-sm">
+            Desarrollado con 😡 por
+            <span class="text-purple-400 font-semibold">2khartes</span> |
+            <span class="text-gray-400"
+              >Diseño y Desarrollo Web Profesional</span
+            >
+          </p>
+        </div>
+      </div>
+    </footer>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+
+    {% if messages %} {% for message in messages %}
+    <script>
+      Toastify({
+        text: "{{message}}",
+        duration: 3000,
+        className: "text-[#F87171] ",
+        backgroundColor: "#1F2937",
+        position: "left",
+      }).showToast();
+    </script>
+    {% endfor %} {% endif %}
+  </body>
+</html>

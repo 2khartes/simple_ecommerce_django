@@ -1,0 +1,166 @@
+{% extends "main/layout.html" %} {% block content %} {% load static %}
+<section
+  class="min-h-[75vh] flex items-center justify-center bg-gradient-to-b from-purple-600 to-[#812BCC] text-white"
+>
+  <div class="max-w-4xl mx-auto px-4 text-center" data-aos="zoom-out-down">
+    <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+      Dinámico, enfocado en gadgets y electrónica
+    </h1>
+    <p class="text-xl md:text-2xl mb-8 text-purple-100 max-w-2xl mx-auto">
+      Encuentra lo que necesitas, cuando lo necesitas
+    </p>
+  </div>
+</section>
+<img
+  alt="wave"
+  src="{% static 'main/hero.svg' %}"
+  class="w-full h-auto absolute -z-10"
+/>
+
+<section class="min-h-screen flex items-center justify-center mt-[250px]">
+  <div class="max-w-6xl mx-auto px-4 w-full">
+    <h2
+      data-aos="fade-up"
+      class="text-4xl md:text-5xl font-bold text-center mb-4 text-gray-800"
+    >
+      Nuestros Productos
+    </h2>
+    <p
+      data-aos="fade-down"
+      class="text-center text-gray-600 mb-12 text-lg max-w-2xl mx-auto"
+    >
+      Descubre nuestras productos premium para potenciar tu negocio
+    </p>
+
+    <div
+      class="flex flex-wrap gap-3 mx-auto max-w-4xl w-full items-center justify-center"
+    >
+      {% if products %}
+      <form id="form_with_token">{% csrf_token %}</form>
+      {% for product in products %}
+      <div
+        data-aos="{{ product.aos_animacion }}"
+        data-aos-delay="{{ product.aos_retraso }}"
+        class="min-w-[200px] max-w-[300px] bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+      >
+        <img
+          src="{{product.img.url}}"
+          alt="Desarrollo Web"
+          class="w-full h-64 object-cover"
+        />
+        <div class="p-6 w-full">
+          <h3 class="text-2xl font-bold text-gray-800 mb-2">
+            {{product.name}}
+          </h3>
+          <p class="text-3xl font-bold text-purple-600 mb-3">
+            ${{product.price}}
+          </p>
+          <p
+            class="text-gray-600 leading-relaxed mb-4 truncate text-ellipsis max-w-[200ch]"
+          >
+            {{product.description}}
+          </p>
+          <button
+            type="button"
+            data-url-base="{% url 'shopping_cart:add' product.id %}"
+            class="btn-add-cart w-full cursor-pointer px-3 bg-purple-800 text-white font-bold py-3 rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300"
+          >
+            Agregar al carrito
+          </button>
+        </div>
+      </div>
+      {% endfor %} {% else %}
+      <div
+        data-aos="flip-up"
+        class="bg-white rounded-lg shadow-lg p-8 text-center flex-1"
+      >
+        <div class="mb-6 flex justify-center">
+          <div
+            class="w-20 h-20 bg-gradient-to-br from-purple-200 to-purple-100 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-10 h-10 text-purple-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+              ></path>
+            </svg>
+          </div>
+        </div>
+
+        <h2 class="text-2xl font-bold text-purple-900 mb-2">Sin productos</h2>
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          No encontramos productos para mostrar. Intenta a recargar la pagina o
+          crear alguno.
+        </p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <script>
+    const addToCart = async (url) => {
+      try {
+        const csrftoken = document
+          .querySelector('meta[name="csrf-token"]')
+          .getAttribute("content");
+
+        const resp = await fetch(window.location.href + url.replace("/", ""), {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrftoken,
+          },
+        });
+
+        const data = await resp.json();
+
+        if (![200, 202].includes(data.status)) {
+          Toastify({
+            text: data.message,
+            duration: 3000,
+            className: "text-[#F87171] ",
+            backgroundColor: "#1F2937",
+            position: "left",
+          }).showToast();
+          return;
+        }
+        Toastify({
+          text: data.message,
+          duration: 3000,
+          className: "text-emerald-500 ",
+          backgroundColor: "#1F2937",
+          position: "left",
+        }).showToast();
+      } catch (e) {
+        Toastify({
+          text: e.message,
+          duration: 3000,
+          className: "text-[#F87171] ",
+          backgroundColor: "#1F2937",
+          position: "left",
+        }).showToast();
+      }
+    };
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const buttons = document.querySelectorAll(".btn-add-cart");
+
+      [...buttons].forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const url = btn.getAttribute("data-url-base");
+          console.log(url);
+          addToCart(url);
+        });
+      });
+    });
+  </script>
+</section>
+
+{% endblock %}
