@@ -5,127 +5,134 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token }}" />
+
     <title>TechFlow</title>
+
+    <link rel="icon" type="image/x-icon" href="{% static 'main/icon.png' %}" />
+    <!-- ICONS -->
     <link
-      rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖥️</text></svg>"
+      rel="stylesheet"
+      href="{% static 'main/icons/bootstrap-icons.css' %}"
     />
-    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <!-- TAILWIND -->
+    <link rel="stylesheet" href="{% static 'main/css/output.css' %}" />
+    <!-- AOS - AUTOANIMATE -->
+    <link rel="stylesheet" href="{% static 'main/aos/aos.css' %}" />
+    <script src="{% static 'main/aos/aos.js' %}"></script>
+
+    <!-- TOASTIFY -->
     <link
       rel="stylesheet"
       type="text/css"
-      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+      href="{% static 'main/toastify/toastify.min.css' %}"
     />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{% static 'main/toastify/toastify-js.js' %}"></script>
   </head>
-  <body class="antialiased bg-gradient-to-br from-gray-100 to-gray-300">
-    <nav
-      class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-black/10"
+  <body>
+    {% if request.user and request.user.is_superuser %}
+    <aside
+      class="flex items-center md:flex-col gap-5 justify-center md:justify-start py-6 fixed w-full md:max-w-[100px] left-0 bottom-0 h-[60px] md:top-0 md:h-screen bg-[#F5E6CF] border-t-4 md:border-t-0 md:border-r-4 border-black z-50"
     >
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-          <div class="flex items-center gap-2">
-            <a
-              href="{% url 'inicio'%}"
-              class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent"
-              >🖥️ ElectroVault
-            </a>
-          </div>
-          <a
-            href="{% url 'inicio' %}"
-            class="bg-amber-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
+      <h2 class="font-bold md:block hidden text-lg border-b-2 border-black">
+        {{request.user.username}} <br />
+        Admin
+      </h2>
+      <div class="text-center group">
+        <a href="{% url 'inicio' %}" class="">
+          <i class="bi bi-house-door-fill"></i>
+          <span
+            class="block font-semibold text-sm group-hover:underline decoration-2"
+            >Inicio</span
           >
-            🏠
+        </a>
+      </div>
+
+      <div class="text-center">
+        <a href="{% url 'products:lista' %}" class="group">
+          <i class="bi bi-box2-heart-fill font-bold"></i>
+          <span
+            class="block font-semibold text-sm group-hover:underline decoration-2"
+            >Inventario</span
+          >
+        </a>
+      </div>
+      <div class="text-center">
+        <a href="{% url 'categories:lista' %}" class="group">
+          <i class="bi bi-tags-fill"></i>
+          <span
+            class="block font-semibold text-sm group-hover:underline decoration-2"
+            >Categorias</span
+          >
+        </a>
+      </div>
+    </aside>
+
+    {% endif %}
+
+    <header
+      class="bg-[#F5E6CF] sticky top-0 z-40 border-b-4 border-black {% if request.user and request.user.is_superuser %} md:ml-[100px] {% else %} {% endif %}"
+    >
+      <nav
+        class="px-4 sm:px-6 lg:px-8 flex justify-center md:justify-between items-center py-3 gap-4 flex-wrap"
+      >
+        <div class="flex items-center gap-2">
+          <a href="{% url 'inicio' %}" class="bg-amber-500 btn">
+            <span class="font-bold">TechFlow</span>
+            <i class="bi bi-house-door-fill"></i>
           </a>
-          {% if request.user.is_authenticated %}
-          <div class="gap-2 flex items-center">
-            <h3
-              class="font-semibold text-lg text-gray-400 border-r-4 border-gray-300 pr-3"
-            >
-              {{request.user.username}}
-            </h3>
-            <a
-              href="{% url 'shopping_cart:lista' %}"
-              class="bg-sky-400 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
-            >
-              🛒
-            </a>
-            {% if request.user.is_superuser %}
-            <a
-              href="{% url 'products:lista' %}"
-              class="bg-rose-400 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
-            >
-              📦 Inventario
-            </a>
-            {% endif %}
-            <a
-              href="{% url 'logout' %}"
-              class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
-            >
-              🚪 Cerrar Sesión
-            </a>
-          </div>
-          {% else %}
-          <div class="mx-w-[400px] gap-2 flex">
-            <a
-              href="{% url 'login' %}"
-              class="bg-purple-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
-            >
-              Iniciar Sesión
-            </a>
-            <a
-              href="{% url 'register' %}"
-              class="bg-blue-600 hover:bg-violet-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
-            >
-              Registro
-            </a>
-          </div>
-          {% endif %}
         </div>
-      </div>
-    </nav>
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/toastify-js"
-    ></script>
-    <main class="">{% block content %} {% endblock %}</main>
-    <img
-      src="{% static 'main/footer.svg' %}"
-      class="w-full object-cover -mt-[200px]"
-    />
-    <footer class="bg-slate-900 text-slate-200">
-      <div class="pt-8">
-        <div
-          class="flex flex-col md:flex-row items-center justify-center w-full"
-        >
-          <p class="text-gray-400 text-sm">
-            © 2025 ElectroVault. Todos los derechos reservados.
-          </p>
+
+        {% if request.user.is_authenticated %}
+        <div class="gap-2 flex items-center">
+          <h3 class="font-bold text-xl text-black border-black border-r-4 pr-3">
+            {{request.user.username}}
+          </h3>
+          <a href="{% url 'shopping_cart:lista' %}" class="bg-sky-400 btn">
+            <i class="bi bi-basket2-fill"></i>
+          </a>
+          <a href="{% url 'logout' %}" class="btn bg-[#FB5557]">
+            <i class="bi bi-door-closed-fill"></i>
+          </a>
         </div>
-        <div class="mt-8 pb-8 text-center">
-          <p class="text-gray-500 text-sm">
-            Desarrollado con 😡 por
-            <span class="text-purple-400 font-semibold">2khartes</span> |
-            <span class="text-gray-400"
-              >Diseño y Desarrollo Web Profesional</span
-            >
-          </p>
+        {% else %}
+        <div class="mx-w-[400px] gap-2 flex">
+          <a href="{% url 'login' %}" class="btn bg-sky-400">
+            Iniciar Sesión
+          </a>
+          <a href="{% url 'register' %}" class="btn bg-orange-500">
+            Registro
+          </a>
         </div>
-      </div>
-    </footer>
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+        {% endif %}
+      </nav>
+    </header>
+
+    <!-- !NO MOVER ESTO DE AQUI -->
     <script>
       AOS.init();
     </script>
 
+    <main
+      class="{% if request.user and request.user.is_superuser %} md:ml-[130px] mb-[100px] md:mb-0 {% else %} {% endif %}"
+    >
+      {% block content %} {% endblock %}
+    </main>
+
     {% if messages %} {% for message in messages %}
     <script>
+      let statusClass = "#16B981";
+      const type = "{{ message.tags }}";
+      if (type != "success") statusClass = "#FF6467";
+
       Toastify({
         text: "{{message}}",
         duration: 3000,
-        className: "text-[#F87171] ",
-        backgroundColor: "#1F2937",
-        position: "left",
+        className: "btn",
+        position: "right",
+        style: {
+          color: "black",
+          background: statusClass,
+        },
       }).showToast();
     </script>
     {% endfor %} {% endif %}

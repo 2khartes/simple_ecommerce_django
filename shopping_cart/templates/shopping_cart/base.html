@@ -1,29 +1,31 @@
 {% extends "main/layout.html" %} {% block content %}
 
 <section class="max-w-6xl w-full mx-auto px-3 py-2 pt-12">
-  <div class="flex items-center justify-between mb-8">
+  <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
     <div>
       <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
-        🛒 Mi Carrito
+        <i class="bi bi-basket2-fill"></i> Mi Carrito
       </h1>
-      <p class="text-gray-600">Gestiona tus productos y completa tu compra</p>
+      <p class="text-gray-600 font-semibold">
+        Gestiona tus productos y completa tu compra
+      </p>
     </div>
-    <button
-      type="button"
+    <a
       id="buy-btn"
-      class="bg-amber-500 hover:bg-yellow-700 text-black px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
+      href="{% url 'shopping_cart:lista' %}"
+      class="bg-sky-400 btn md:w-fit w-full"
     >
-      🛒 Comprar
-    </button>
+      Comprar <i class="bi bi-basket2-fill"></i>
+    </a>
   </div>
 
   <div class="space-y-4" id="cart_container">
     {% if carts %} {% for cart in carts %}
     <div
       id="cart-id-{{cart.id}}"
-      class="cart-item-enter bg-white rounded-lg border-2 border-purple-100 p-6 hover:shadow-md transition-shadow"
+      class="cart-item-enter bg-[#F5E6CF] px-4 py-2 border-4 border-black"
     >
-      <div class="flex gap-6">
+      <div class="flex gap-6 flex-wrap">
         <div class="flex-shrink-0">
           <img
             src=" {{cart.product.img.url}}"
@@ -37,13 +39,13 @@
             {{cart.product.name}}
           </h3>
 
-          <p class="text-purple-600 font-semibold">
+          <p class="text-orange-600 font-semibold">
             Precio:
             <span class="text-gray-900" id="cart-price-{{cart.id}}">
               {{cart.product.price}}</span
             >
           </p>
-          <p class="text-purple-600 font-semibold mb-1">
+          <p class="text-orange-600 font-semibold mb-1">
             Unidades disponibles:
             <span class="text-gray-900" id="cart-price-{{cart.id}}">
               {{cart.product.stock}}</span
@@ -54,41 +56,45 @@
             <button
               cart-id="{{cart.id}}"
               type-action="sub"
-              class="btn-change-stock bg-purple-100 hover:bg-purple-200 text-purple-700 w-10 h-10 rounded-lg font-bold transition-colors"
+              class="btn bg-[#FE8B5A] btn-change-stock"
             >
-              −
+              <i class="bi bi-dash" style="-webkit-text-stroke: 1px"></i>
             </button>
             <span
               id="ammount-cart-{{cart.id}}"
               max-ammount-value="{{cart.product.stock}}"
-              class="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg font-semibold text-center w-16"
-              >0</span
+              class="px-4 py-2 border-black border-[3px] font-semibold text-xl text-center w-16 bg-slate-200"
+              >1</span
             >
             <button
               cart-id="{{cart.id}}"
               type-action="add"
-              class="btn-change-stock bg-purple-100 hover:bg-purple-200 text-purple-700 w-10 h-10 rounded-lg font-bold transition-colors"
+              class="bg-red-400 btn btn-change-stock"
             >
-              +
+              <i class="bi bi-plus" style="-webkit-text-stroke: 1px"></i>
             </button>
           </div>
         </div>
 
-        <div class="flex flex-col items-end justify-between">
-          <button
-            cart-id-to-delete="{{cart.id}}"
-            data-url-base="{% url 'shopping_cart:delete' cart.id %}"
-            class="btn-delete-cart text-blue-600 hover:text-blue-700 font-semibold transition-colors flex items-center gap-1 bg-slate-100 px-3 py-1 rounded-md"
-          >
-            🗑️ Eliminar
-          </button>
+        <div
+          class="flex md:gap-0 gap-4 md:flex-col items-end justify-between md:w-fit w-full"
+        >
+          <form action="{% url 'shopping_cart:delete' cart.id %}">
+            <button
+              onclick="return confirm('¿Seguro seguro que quieres eliminar este preciado articulo')"
+              class="bg-orange-600 btn w-full"
+            >
+              <i class="bi bi-trash3-fill"></i>
+            </button>
+          </form>
+
           <div>
-            <p class="text-sm text-gray-600 mb-1">Total:</p>
+            <p class="font-semibold text-gray-600 mb-1">Total:</p>
             <p
               id="total-ammount-{{cart.id}}"
-              class="total-ammount text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"
+              class="total-ammount text-2xl font-bold text-black"
             >
-              $0
+              ${{cart.product.price}}
             </p>
           </div>
         </div>
@@ -97,144 +103,27 @@
     {% endfor %} {% else %}
     <div
       data-aos="flip-up"
-      class="bg-white rounded-lg shadow-lg p-8 text-center flex-1"
+      class="bg-[#F5E6CF] shadow-lg p-8 text-center flex-1 border-4 border-black"
     >
       <div class="mb-6 flex justify-center">
         <div
-          class="w-20 h-20 bg-gradient-to-br from-purple-200 to-purple-100 rounded-full flex items-center justify-center"
+          class="w-20 h-20 bg-amber-500 rounded-full flex items-center justify-center border-4 border-black"
         >
-          <svg
-            class="w-10 h-10 text-purple-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-            ></path>
-          </svg>
+          <i class="bi bi-basket2-fill text-3xl"></i>
         </div>
       </div>
 
-      <h2 class="text-2xl font-bold text-purple-900 mb-2">
-        Sin productos en el carro
-      </h2>
-      <p class="text-gray-600 mb-6 leading-relaxed">
-        No encontramos productos para mostrar. Intenta a recargar la pagina o
-        añadir alguno.
+      <h2 class="text-2xl font-bold mb-2">Carrito Vacio</h2>
+      <p class="text-gray-600 font-semibold mb-6 leading-relaxed">
+        No encontramos productos para mostrar en el carrito, intenta añadir uno.
       </p>
     </div>
     {% endif %}
   </div>
 </section>
-<script type="module">
-  import autoAnimate from "https://cdn.jsdelivr.net/npm/@formkit/auto-animate@1.0.0-beta.1/index.min.js";
-  autoAnimate(document.getElementById("cart_container"));
-</script>
-<script>
-  const deleteFromCart = async (url) => {
-    try {
-      const csrftoken = document
-        .querySelector('meta[name="csrf-token"]')
-        .getAttribute("content");
 
-      const resp = await fetch(
-        window.location.href.replace("cart/", "") + url.replace("/", ""),
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrftoken,
-          },
-        }
-      );
-
-      const data = await resp.json();
-
-      if (![200, 202].includes(data.status)) {
-        Toastify({
-          text: data.message,
-          duration: 3000,
-          className: "text-[#F87171] ",
-          backgroundColor: "#1F2937",
-          position: "left",
-        }).showToast();
-        return false;
-      }
-      Toastify({
-        text: data.message,
-        duration: 3000,
-        position: "left",
-        className: "text-emerald-500 ",
-        backgroundColor: "#1F2937",
-      }).showToast();
-      return true;
-    } catch (e) {
-      Toastify({
-        text: e.message,
-        duration: 3000,
-        className: "text-[#F87171] ",
-        backgroundColor: "#1F2937",
-        position: "left",
-      }).showToast();
-      return false;
-    }
-  };
-</script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    const buttons = document.querySelectorAll(".btn-delete-cart");
-    [...buttons].forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        const url = btn.getAttribute("data-url-base");
-        const resp = deleteFromCart(url);
-        if (resp) {
-          const id = btn.getAttribute("cart-id-to-delete");
-          document.getElementById(`cart-id-${id}`).remove();
-          const content = document.getElementById("cart_container");
-          if (content.textContent.trim() == "") {
-            const div = document.createElement("div");
-            div.innerHTML = `<div
-      data-aos="flip-up"
-      class="bg-white rounded-lg shadow-lg p-8 text-center flex-1"
-    >
-      <div class="mb-6 flex justify-center">
-        <div
-          class="w-20 h-20 bg-gradient-to-br from-purple-200 to-purple-100 rounded-full flex items-center justify-center"
-        >
-          <svg
-            class="w-10 h-10 text-purple-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-            ></path>
-          </svg>
-        </div>
-      </div>
-
-      <h2 class="text-2xl font-bold text-purple-900 mb-2">
-        Sin productos en el carro
-      </h2>
-      <p class="text-gray-600 mb-6 leading-relaxed">
-        No encontramos productos para mostrar. Intenta a recargar la pagina o
-        añadir alguno.
-      </p>
-    </div>`;
-            content.appendChild(div);
-          }
-        }
-      });
-    });
-
     const stockButtons = document.querySelectorAll(".btn-change-stock");
     [...stockButtons].forEach((btn) => {
       btn.addEventListener("click", (e) => {
@@ -263,68 +152,6 @@
         ammount * price
       }`;
     };
-  });
-</script>
-<script>
-  document.getElementById("buy-btn").addEventListener("click", async (e) => {
-    const csrftoken = document
-      .querySelector('meta[name="csrf-token"]')
-      .getAttribute("content");
-
-    const resp = await fetch(window.location.href + "delete_all", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": csrftoken,
-      },
-    });
-
-    const data = await resp.json();
-
-    Toastify({
-      text: data.message,
-      duration: 3000,
-      position: "left",
-      className: "text-emerald-500 ",
-      backgroundColor: "#1F2937",
-    }).showToast();
-
-    const content = document.getElementById("cart_container");
-    content.innerHTML = "";
-    const div = document.createElement("div");
-    div.innerHTML = `<div
-      data-aos="flip-up"
-      class="bg-white rounded-lg shadow-lg p-8 text-center flex-1"
-    >
-      <div class="mb-6 flex justify-center">
-        <div
-          class="w-20 h-20 bg-gradient-to-br from-purple-200 to-purple-100 rounded-full flex items-center justify-center"
-        >
-          <svg
-            class="w-10 h-10 text-purple-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-            ></path>
-          </svg>
-        </div>
-      </div>
-
-      <h2 class="text-2xl font-bold text-purple-900 mb-2">
-        Sin productos en el carro
-      </h2>
-      <p class="text-gray-600 mb-6 leading-relaxed">
-        No encontramos productos para mostrar. Intenta a recargar la pagina o
-        añadir alguno.
-      </p>
-    </div>`;
-    content.appendChild(div);
   });
 </script>
 {% endblock %}

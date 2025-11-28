@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+html,
+body {
+  background-color: #faf5ea;
+  opacity: 1;
+  background-image: radial-gradient(#f5e6cf 1.5px, transparent 1.5px),
+    radial-gradient(#f5e6cf 1.5px, #faf5ea 1.5px);
+  background-size: 60px 60px;
+  background-position: 0 0, 30px 30px;
+}
+
+button,
+a {
+  cursor: pointer;
+}
+
+.btn {
+  border-radius: 0;
+  padding: 6px 10px;
+  border: 3px solid black;
+  margin: 0 4px;
+  box-shadow: 3px 3px 0px 1px #000000;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  box-shadow: 0px 0px 0px 1px #000000;
+}

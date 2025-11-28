@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "main",
     "products",
-    "shopping_cart"
+    "shopping_cart",
+    "categories"
 ]
 
 MIDDLEWARE = [
@@ -77,11 +78,14 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'mysql.connector.django',
+        'NAME': 'simple_ecommerce_django',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',  # O la IP de tu servidor de BD, por ejemplo, '127.0.0.1'
+        'PORT': '3306',      # El puerto por defecto de MySQL
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

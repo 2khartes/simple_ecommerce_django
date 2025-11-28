@@ -11,7 +11,8 @@ urlpatterns = [
     path('register', auth_register, name="register"),
     path('logout', auth_logout, name="logout"),
     path('', include('products.urls'))   ,
-    path('', include('shopping_cart.urls'))   
+    path('', include('shopping_cart.urls')), 
+    path('', include('categories.urls')), 
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

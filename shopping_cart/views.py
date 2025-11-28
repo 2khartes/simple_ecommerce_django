@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest
-from django.http import JsonResponse
+from django.http import HttpRequest, JsonResponse
 from shopping_cart.models import ShoppingCart
 from products.models import Product
 from django.db import IntegrityError
+from django.contrib import messages
+
 
 @login_required(login_url="/login")
 def base(req:HttpRequest):
@@ -24,7 +25,7 @@ def add(req:HttpRequest,productId):
             user =  req.user,
             product =  productMatch
         )
-        return JsonResponse({'status': 'error', 'message': 'Producto añadido'}, status=202)
+        return JsonResponse({'status': 'ok', 'message': 'Producto añadido'}, status=202)
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'El producto Seleccionado no existe'}, status=404)
     except IntegrityError:
@@ -32,14 +33,20 @@ def add(req:HttpRequest,productId):
 
 
 def delete(req:HttpRequest,cartId):
-    if req.method != "DELETE":
-        return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
+    print(req.method)
+    if req.method != "GET":
+       messages.error(req, "Metodo no permitido")
+       return redirect("/cart")
     try:
         productMatch = ShoppingCart.objects.get(id=cartId)
         productMatch.delete()
-        return JsonResponse({'status': 'error', 'message': 'Item eliminado'}, status=202)
+        messages.success(req, "Producto quitado del carrito")
+        
+        return redirect("/cart")
+    
     except cartId.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'El producto seleccionado no existe'}, status=404)
+        messages.error(req, "Este producto no existe")
+        return redirect("/cart")
 
 def deleteAll(req:HttpRequest):
     if req.method != "DELETE":

@@ -16,7 +16,7 @@ def base(req):
     ]
     for i, product in enumerate(products):
         product.aos_animacion = random.choice(opciones_aos)
-        product.aos_retraso = i * 150 
+        product.aos_retraso = 0
     return render(req,"main/inicio.html",{"products":products})
 
 
